@@ -1,4 +1,4 @@
-import { StyleSheet, Image, Platform } from 'react-native';
+import {StyleSheet, Image, Platform, View, Text, ScrollView, SafeAreaView} from 'react-native';
 
 import { Collapsible } from '@/components/Collapsible';
 import { ExternalLink } from '@/components/ExternalLink';
@@ -6,92 +6,90 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import tinyColor from "tinycolor2";
+import {Link} from "expo-router";
+import {useTheme} from "@react-navigation/native";
 
-export default function TabTwoScreen() {
+export default function TransactionScreen() {
+  const {colors} = useTheme()
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Explore</ThemedText>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image source={require('@/assets/images/react-logo.png')} style={{ alignSelf: 'center' }} />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Custom fonts">
-        <ThemedText>
-          Open <ThemedText type="defaultSemiBold">app/_layout.tsx</ThemedText> to see how to load{' '}
-          <ThemedText style={{ fontFamily: 'SpaceMono' }}>
-            custom fonts such as this one.
-          </ThemedText>
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/versions/latest/sdk/font">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user's current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful <ThemedText type="defaultSemiBold">react-native-reanimated</ThemedText>{' '}
-          library to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-    </ParallaxScrollView>
+      <SafeAreaView style={{flex: 1}}>
+        <View className='p-2 h-fit'>
+          <View className='p-4 mb-4' style={{backgroundColor: colors.background}}>
+            <View className='flex flex-row gap-2 mb-4'>
+              <Image source={require('@/assets/images/partial-react-logo.png')} className='w-10 h-10 rounded-full mb-1'/>
+              <View>
+                <Text style={{color: colors.text}} className='text-lg'>Nguyen Nhut Tan</Text>
+                <Text style={{color: tinyColor(colors.text).darken(40).toString()}}>nguyentan1510</Text>
+              </View>
+            </View>
+
+            <View className='mb-4 flex flex-row justify-between items-baseline'>
+              <Text style={{color: tinyColor(colors.text).darken(40).toString()}} className='text-lg'>Total</Text>
+              <Text style={{color: colors.text}} className='text-2xl'>$9,780.39</Text>
+            </View>
+
+
+          </View>
+        </View>
+
+        <View className='p-4 rounded-tl-3xl rounded-tr-3xl flex-1' style={{backgroundColor: colors.background}}>
+          <View className='flex flex-row justify-between mb-4'>
+            <Text style={{color: colors.text}} className='font-bold'>Transaction</Text>
+            <Link href={'/'} style={{color: colors.text}} className='font-bold'>View All</Link>
+          </View>
+
+          <ScrollView>
+            <View className='flex flex-col gap-y-2'>
+              {/*<Transaction />*/}
+
+              <View className='flex flex-col gap-2'>
+                <Text style={{color: colors.text}}>6/9</Text>
+                <View className='flex flex-row gap-2 rounded-2xl border p-2' style={{borderColor: colors.border}}>
+                  <Image source={require('@/assets/images/partial-react-logo.png')} className='w-8 h-8 rounded-full'/>
+                  <View>
+                    <Text style={{color: colors.text}} className='text-md font-bold'>Food</Text>
+                    <Text style={{color: tinyColor(colors.text).darken(40).toString()}} className='text-sm'>Dinner</Text>
+                  </View>
+                  <Text style={{color: colors.text}} className='flex-1 text-right'>-$39</Text>
+                </View>
+
+                <View className='flex flex-row gap-2 rounded-2xl border p-2' style={{borderColor: colors.border}}>
+                  <Image source={require('@/assets/images/partial-react-logo.png')} className='w-8 h-8 rounded-full'/>
+                  <View>
+                    <Text style={{color: colors.text}} className='text-md font-bold'>Food</Text>
+                    <Text style={{color: tinyColor(colors.text).darken(40).toString()}} className='text-sm'>Dinner</Text>
+                  </View>
+                  <Text style={{color: colors.text}} className='flex-1 text-right'>-$39</Text>
+                </View>
+              </View>
+
+              <View className='flex flex-col gap-2'>
+                <Text style={{color: colors.text}}>5/9</Text>
+                <View className='flex flex-row gap-2 rounded-2xl border p-2' style={{borderColor: colors.border}}>
+                  <Image source={require('@/assets/images/partial-react-logo.png')} className='w-8 h-8 rounded-full'/>
+                  <View>
+                    <Text style={{color: colors.text}} className='text-md font-bold'>Food</Text>
+                    <Text style={{color: tinyColor(colors.text).darken(40).toString()}} className='text-sm'>Dinner</Text>
+                  </View>
+                  <Text style={{color: colors.text}} className='flex-1 text-right'>-$39</Text>
+                </View>
+
+                <View className='flex flex-row gap-2 rounded-2xl border p-2' style={{borderColor: colors.border}}>
+                  <Image source={require('@/assets/images/partial-react-logo.png')} className='w-8 h-8 rounded-full'/>
+                  <View>
+                    <Text style={{color: colors.text}} className='text-md font-bold'>Food</Text>
+                    <Text style={{color: tinyColor(colors.text).darken(40).toString()}} className='text-sm'>Dinner</Text>
+                  </View>
+                  <Text style={{color: colors.text}} className='flex-1 text-right'>-$39</Text>
+                </View>
+              </View>
+            </View>
+          </ScrollView>
+
+        </View>
+      </SafeAreaView>
   );
 }
 
