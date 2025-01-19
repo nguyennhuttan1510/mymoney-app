@@ -2,6 +2,8 @@ import {Image, StyleSheet, Platform, SafeAreaView, View, Text, ScrollView} from 
 import tinyColor from 'tinycolor2';
 import {useTheme} from "@react-navigation/native";
 import {Link} from "expo-router";
+import Transaction from "@/app/(tabs)/components/Transaction";
+import {TRANSACTION_TYPE} from "@/utils/format";
 import {AntDesign} from "@expo/vector-icons";
 
 export default function HomeScreen() {
@@ -30,6 +32,11 @@ export default function HomeScreen() {
               <ScrollView>
                   <View className='flex flex-col gap-y-2'>
                       {/*<Transaction />*/}
+
+                    <Transaction>
+                      <Transaction.GroupTitle>Yesterday</Transaction.GroupTitle>
+                      <Transaction.Item type={TRANSACTION_TYPE.EXPENSE} amount={10000} category={'Ăn uống'} description={'Ăn phở'} />
+                    </Transaction>
 
                       <View className='flex flex-col gap-2'>
                           <Text style={{color: colors.text}}>6/9</Text>
