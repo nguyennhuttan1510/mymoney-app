@@ -6,11 +6,12 @@ import Animated, {ReduceMotion, useAnimatedStyle, useSharedValue, withSpring} fr
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import {Ionicons, MaterialCommunityIcons} from "@expo/vector-icons";
 import TabBarItem from "@/components/TabBarItem";
+import {useRouter} from "expo-router";
 
 export function TabBar({state, descriptors, navigation}: BottomTabBarProps) {
     const {colors} = useTheme();
     const {buildHref} = useLinkBuilder();
-
+    const router = useRouter()
     const icon = {
         'index': (props: any) => <MaterialIcons size={24} name='home' color={'#222'} {...props} />,
         'transaction': (props: any) => <MaterialCommunityIcons name="swap-horizontal" size={24}
@@ -78,6 +79,10 @@ export function TabBar({state, descriptors, navigation}: BottomTabBarProps) {
 
                 const onPress = () => {
                     tabBarItemAnimation()
+                    if (route.name === 'create') {
+                        router.push('/modals/transaction-create')
+                        return
+                    }
                     const event = navigation.emit({
                         type: 'tabPress',
                         target: route.key,

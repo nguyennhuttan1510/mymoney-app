@@ -1,4 +1,4 @@
-import {StyleSheet, Image, Platform, Text} from 'react-native';
+import {StyleSheet, Image, Platform, Text, View} from 'react-native';
 
 import {Collapsible} from '@/components/Collapsible';
 import {ExternalLink} from '@/components/ExternalLink';
@@ -22,21 +22,26 @@ export default function TabTwoScreen() {
 
 
     return (
-        <BottomSheetModal
-            ref={bottomSheetModalRef}
-            onChange={handleSheetChanges}
-            snapPoints={['80%']}
-            enablePanDownToClose={true}
-        >
-            <BottomSheetView style={styles.contentContainer}>
-                <Text>Awesome 🎉</Text>
-                <Text>Awesome 🎉</Text>
-                <Text>Awesome 🎉</Text>
-                <Text>Awesome 🎉</Text>
-                <Text>Awesome 🎉</Text>
-                <Text>Awesome 🎉</Text>
-            </BottomSheetView>
-        </BottomSheetModal>
+        <View style={{flex: 1, justifyContent: 'center'}}>
+            <Text>
+                Create screen
+            </Text>
+        </View>
+        // <BottomSheetModal
+        //     ref={bottomSheetModalRef}
+        //     onChange={handleSheetChanges}
+        //     snapPoints={['80%']}
+        //     enablePanDownToClose={true}
+        // >
+        //     <BottomSheetView style={styles.contentContainer}>
+        //         <Text>Awesome 🎉</Text>
+        //         <Text>Awesome 🎉</Text>
+        //         <Text>Awesome 🎉</Text>
+        //         <Text>Awesome 🎉</Text>
+        //         <Text>Awesome 🎉</Text>
+        //         <Text>Awesome 🎉</Text>
+        //     </BottomSheetView>
+        // </BottomSheetModal>
     );
 }
 

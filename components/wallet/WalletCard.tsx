@@ -10,7 +10,7 @@ interface WalletCardBaseProps extends ViewProps {
     footer?: React.ReactNode
 }
 
-interface WalletCardContentProps {
+export interface WalletCardContentProps {
     amount: number | string
     nickname?: string
     walletType: string

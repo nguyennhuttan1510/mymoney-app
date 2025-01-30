@@ -58,9 +58,9 @@ export default function TabBarItem(props: TabBarItem) {
             style={style.tabBarItem}
         >
             <Animated.View style={[animatedIconStyle]}>
-                {icon({
+                {icon ? icon({
                     color: isFocused ? 'white' : colors.text,
-                })}
+                }) : null}
             </Animated.View>
             <Text style={{color: isFocused ? 'white' : colors.text}}>
                 {label}

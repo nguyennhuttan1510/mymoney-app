@@ -2,7 +2,7 @@ import {Image, Pressable, ScrollView, StyleSheet, Text, View} from 'react-native
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 import tinyColor from "tinycolor2";
-import {Link} from "expo-router";
+import {Link, useRouter} from "expo-router";
 import {useTheme} from "@react-navigation/native";
 import BottomSheet, {
     BottomSheetModal,
@@ -13,9 +13,11 @@ import BottomSheet, {
 import React, {useCallback, useMemo, useRef} from "react";
 import {Easing, ReduceMotion} from "react-native-reanimated";
 import {WalletCardWrapper, WalletCardContent} from "@/components/wallet/WalletCard";
+import Wallets from "@/components/wallet/components/Wallets";
 
 export default function TransactionScreen() {
     const {colors} = useTheme()
+    const router = useRouter()
     const bottomSheetRef = useRef<BottomSheet>(null);
 
     // callbacks
@@ -24,14 +26,14 @@ export default function TransactionScreen() {
     }, []);
     const handleSnapPress = useCallback(() => {
         bottomSheetRef.current?.snapToIndex(0, {
-            duration: 250,
+            duration: 500,
             easing: Easing.inOut(Easing.quad),
             reduceMotion: ReduceMotion.Never,
         });
     }, []);
     const handleClosePress = useCallback(() => {
         bottomSheetRef.current?.close({
-            duration: 250,
+            duration: 500,
             easing: Easing.inOut(Easing.quad),
             reduceMotion: ReduceMotion.Never,
         });
@@ -221,47 +223,7 @@ export default function TransactionScreen() {
                 enablePanDownToClose={true}
             >
                 <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
-                    <View style={styles.containerWallet}>
-                        <WalletCardWrapper>
-                            <WalletCardContent walletType={'Ví thanh toán'} amount={'134,900,000'}/>
-                        </WalletCardWrapper>
-
-                        <WalletCardWrapper>
-                            <WalletCardContent walletType={'Ví thanh toán'} amount={'134,900,000'}/>
-                        </WalletCardWrapper>
-
-                        <WalletCardWrapper>
-                            <WalletCardContent walletType={'Ví thanh toán'} amount={'134,900,000'}/>
-                        </WalletCardWrapper>
-
-                        <WalletCardWrapper>
-                            <WalletCardContent walletType={'Ví thanh toán'} amount={'134,900,000'}/>
-                        </WalletCardWrapper>
-
-                        <WalletCardWrapper>
-                            <WalletCardContent walletType={'Ví thanh toán'} amount={'134,900,000'}/>
-                        </WalletCardWrapper>
-
-                        <WalletCardWrapper>
-                            <WalletCardContent walletType={'Ví thanh toán'} amount={'134,900,000'}/>
-                        </WalletCardWrapper>
-
-                        <WalletCardWrapper>
-                            <WalletCardContent walletType={'Ví thanh toán'} amount={'134,900,000'}/>
-                        </WalletCardWrapper>
-
-                        <WalletCardWrapper>
-                            <WalletCardContent walletType={'Ví thanh toán'} amount={'134,900,000'}/>
-                        </WalletCardWrapper>
-
-                        <WalletCardWrapper>
-                            <WalletCardContent walletType={'Ví thanh toán'} amount={'134,900,000'}/>
-                        </WalletCardWrapper>
-
-                        <WalletCardWrapper>
-                            <WalletCardContent walletType={'Ví thanh toán'} amount={'134,900,000'}/>
-                        </WalletCardWrapper>
-                    </View>
+                    <Wallets/>
                 </BottomSheetScrollView>
             </BottomSheet>
         </SafeAreaView>
