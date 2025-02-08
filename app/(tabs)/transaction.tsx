@@ -1,50 +1,207 @@
-import {Image, Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {
+    Image,
+    Pressable,
+    ScrollView,
+    SectionList,
+    SectionListData,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View
+} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 import tinyColor from "tinycolor2";
-import {Link, useRouter} from "expo-router";
+import {Link} from "expo-router";
 import {useTheme} from "@react-navigation/native";
-import BottomSheet, {
-    BottomSheetModal,
-    BottomSheetModalProvider,
-    BottomSheetScrollView,
-    BottomSheetView
-} from "@gorhom/bottom-sheet";
-import React, {useCallback, useMemo, useRef} from "react";
-import {Easing, ReduceMotion} from "react-native-reanimated";
-import {WalletCardWrapper, WalletCardContent} from "@/components/wallet/WalletCard";
-import Wallets from "@/components/wallet/components/Wallets";
+import {BottomSheetModal, BottomSheetScrollView} from "@gorhom/bottom-sheet";
+import React, {useCallback, useEffect, useMemo, useRef} from "react";
+import Animated, {Easing, Extrapolation, interpolate, ReduceMotion, useAnimatedStyle} from "react-native-reanimated";
+import Wallets from "@/components/wallet/Wallets";
+import {AntDesign} from "@expo/vector-icons";
+import {TransactionType} from "@/hooks/useTransaction";
+import {CategoryType} from "@/app/(modals)/transaction-create/transaction-type";
+import Transaction from "@/components/transaction/Transaction";
+import Format, {TRANSACTION_TYPE} from "@/utils/format";
+
+type ChangeSpecificType<T, Key extends keyof T, NewType> = {
+    [K in keyof T]: K extends Key ? NewType : T[K];
+};
+
+type TransactionHistoryType = ChangeSpecificType<Omit<TransactionType, 'wallet'>, 'type', Omit<CategoryType, 'children'>>
+
+
+const transactionDataMockup: TransactionHistoryType[] = [
+    {
+        amount: '10.000',
+        date: new Date().toISOString(),
+        description: 'Tiền điện',
+        type: {
+            title: 'Điện',
+            type: 'outcome',
+            id: 1,
+        },
+    },
+    {
+        amount: '10.000',
+        date: new Date().toISOString(),
+        description: '',
+        type: {
+            title: 'Điện',
+            type: 'outcome',
+            id: 1,
+        }
+    },
+    {
+        amount: '10.000',
+        date: new Date().toISOString(),
+        description: '',
+        type: {
+            title: 'Điện',
+            type: 'outcome',
+            id: 1,
+        }
+    },
+    {
+        amount: '20.000',
+        date: new Date().toISOString(),
+        description: '',
+        type: {
+            title: 'Nước',
+            type: 'outcome',
+            id: 2,
+        }
+    },
+    {
+        amount: '20.000',
+        date: new Date().toISOString(),
+        description: '',
+        type: {
+            title: 'Nước',
+            type: 'outcome',
+            id: 2,
+        }
+    },
+    {
+        amount: '20.000',
+        date: new Date().toISOString(),
+        description: '',
+        type: {
+            title: 'Nước',
+            type: 'outcome',
+            id: 2,
+        }
+    },
+    {
+        amount: '20.000',
+        date: new Date().toISOString(),
+        description: '',
+        type: {
+            title: 'Nước',
+            type: 'outcome',
+            id: 2,
+        }
+    },
+    {
+        amount: '20.000',
+        date: new Date().toISOString(),
+        description: '',
+        type: {
+            title: 'Nước',
+            type: 'outcome',
+            id: 2,
+        }
+    },
+    {
+        amount: '500.000',
+        date: new Date().toISOString(),
+        description: '',
+        type: {
+            title: 'Ăn',
+            type: 'outcome',
+            id: 3,
+        }
+    },
+    {
+        amount: '500.000',
+        date: new Date().toISOString(),
+        description: '',
+        type: {
+            title: 'Ăn',
+            type: 'outcome',
+            id: 3,
+        }
+    },
+    {
+        amount: '500.000',
+        date: new Date().toISOString(),
+        description: '',
+        type: {
+            title: 'Ăn',
+            type: 'outcome',
+            id: 3,
+        }
+    }
+]
+
+const months = ['09/2024', '10/2024', '11/2024', '12/2024', '01/2025', '02/2025', '03/2025', 'Tháng trước', 'Tháng này']
 
 export default function TransactionScreen() {
     const {colors} = useTheme()
-    const router = useRouter()
-    const bottomSheetRef = useRef<BottomSheet>(null);
+    const bottomSheetRef = useRef<BottomSheetModal>(null);
 
     // callbacks
     const handleSheetChange = useCallback((index: any) => {
         console.log("handleSheetChange", index);
     }, []);
     const handleSnapPress = useCallback(() => {
-        bottomSheetRef.current?.snapToIndex(0, {
-            duration: 500,
-            easing: Easing.inOut(Easing.quad),
-            reduceMotion: ReduceMotion.Never,
-        });
+        console.log('handleSnapPress')
+        bottomSheetRef.current?.present();
     }, []);
     const handleClosePress = useCallback(() => {
-        bottomSheetRef.current?.close({
-            duration: 500,
-            easing: Easing.inOut(Easing.quad),
-            reduceMotion: ReduceMotion.Never,
-        });
+        bottomSheetRef.current?.close();
+    }, []);
+
+    useEffect(() => {
+        return () => {
+            handleClosePress()
+        }
     }, []);
 
 
-    return (
+    const categoryTypeMapping = (categoryType: CategoryType['type']) => {
+        switch (categoryType) {
+            case "outcome":
+                return TRANSACTION_TYPE.OUTCOME
+            case "income":
+                return TRANSACTION_TYPE.INCOME
+            default:
+                return TRANSACTION_TYPE.OUTCOME
+        }
+    }
 
-        <SafeAreaView style={{flex: 1}}>
-            <View className='p-2'>
-                <View className='p-4 mb-4' style={{backgroundColor: colors.background}}>
+    const uniqueCategory = (transactions: TransactionHistoryType[]) => {
+        return [...new Map(transactions.map(transaction => [transaction.type.id, transaction.type])).values()]
+    }
+
+    const transactionGroupByType = useMemo(() => {
+            const categories = uniqueCategory(transactionDataMockup)
+            return categories.map(category => {
+                const _type = {
+                    ...category,
+                    data: [] as TransactionHistoryType[]
+                }
+                const transactions = transactionDataMockup.filter(transaction => transaction.type?.id === category.id)
+                _type.data = transactions
+                return _type
+            })
+        }
+        , [])
+
+    return (
+        <View style={{flex: 1}}>
+            <View className='bg-white' style={{paddingTop: 12}}>
+                <View className='mb-4'>
                     {/*<View className='flex flex-row gap-2 mb-4'>*/}
                     {/*  <Image source={require('@/assets/images/partial-react-logo.png')} className='w-10 h-10 rounded-full mb-1'/>*/}
                     {/*  <View>*/}
@@ -53,204 +210,148 @@ export default function TransactionScreen() {
                     {/*  </View>*/}
                     {/*</View>*/}
 
-                    <View className='mb-4 flex flex-col items-center'>
-                        <Pressable onPress={() => handleSnapPress()}>
-                            <Text style={styles.titleWallet}>Ví thanh toán</Text>
+                    <View className='flex flex-col items-center'>
+                        <Text className='text-md text-gray-400'>Số dư</Text>
+                        <Text style={{color: colors.text}} className='text-xl font-bold'>9,780.39 VND</Text>
+                        <Pressable className='mt-2' onPress={() => handleSnapPress()}>
+                            <View style={styles.wallet}>
+                                <Image source={require('@/assets/images/partial-react-logo.png')}
+                                       className={`w-6 h-6 rounded-full`}/>
+                                <Text style={styles.walletTitle}>Ví thanh toán</Text>
+                                <AntDesign className='ml-2' name="caretdown" size={12} color="black"/>
+                            </View>
                         </Pressable>
-                        <Text style={{color: colors.text}} className='text-lg'>Số dư ví</Text>
-                        <Text style={{color: colors.text}} className='text-2xl'>9,780.39 VND</Text>
                     </View>
-
-
-                </View>
-            </View>
-
-            <View className='p-4'
-                  style={{backgroundColor: colors.background, flex: 1}}>
-                <View className='flex flex-row justify-between mb-4'>
-                    <Text style={{color: colors.text}} className='font-bold'>Transaction</Text>
-                    <Link href={'/'} style={{color: colors.text}} className='font-bold'>View All</Link>
                 </View>
 
-                <ScrollView style={{paddingHorizontal: 8}} showsVerticalScrollIndicator={false}>
-                    <View className='flex flex-col gap-y-2 pb-[90px]'>
-                        {/*<Transaction />*/}
-
-                        <View className='flex flex-col gap-2'>
-                            <Text style={{color: colors.text}}>6/9</Text>
-                            <View className='flex flex-row gap-2 rounded-2xl border p-2'
-                                  style={{borderColor: colors.border}}>
-                                <Image source={require('@/assets/images/partial-react-logo.png')}
-                                       className='w-8 h-8 rounded-full'/>
-                                <View>
-                                    <Text style={{color: colors.text}} className='text-md font-bold'>Food</Text>
-                                    <Text style={{color: tinyColor(colors.text).darken(40).toString()}}
-                                          className='text-sm'>Dinner</Text>
-                                </View>
-                                <Text style={{color: colors.text}} className='flex-1 text-right'>-$39</Text>
-                            </View>
-
-                            <View className='flex flex-row gap-2 rounded-2xl border p-2'
-                                  style={{borderColor: colors.border}}>
-                                <Image source={require('@/assets/images/partial-react-logo.png')}
-                                       className='w-8 h-8 rounded-full'/>
-                                <View>
-                                    <Text style={{color: colors.text}} className='text-md font-bold'>Food</Text>
-                                    <Text style={{color: tinyColor(colors.text).darken(40).toString()}}
-                                          className='text-sm'>Dinner</Text>
-                                </View>
-                                <Text style={{color: colors.text}} className='flex-1 text-right'>-$39</Text>
-                            </View>
-                        </View>
-
-                        <View className='flex flex-col gap-2'>
-                            <Text style={{color: colors.text}}>6/9</Text>
-                            <View className='flex flex-row gap-2 rounded-2xl border p-2'
-                                  style={{borderColor: colors.border}}>
-                                <Image source={require('@/assets/images/partial-react-logo.png')}
-                                       className='w-8 h-8 rounded-full'/>
-                                <View>
-                                    <Text style={{color: colors.text}} className='text-md font-bold'>Food</Text>
-                                    <Text style={{color: tinyColor(colors.text).darken(40).toString()}}
-                                          className='text-sm'>Dinner</Text>
-                                </View>
-                                <Text style={{color: colors.text}} className='flex-1 text-right'>-$39</Text>
-                            </View>
-
-                            <View className='flex flex-row gap-2 rounded-2xl border p-2'
-                                  style={{borderColor: colors.border}}>
-                                <Image source={require('@/assets/images/partial-react-logo.png')}
-                                       className='w-8 h-8 rounded-full'/>
-                                <View>
-                                    <Text style={{color: colors.text}} className='text-md font-bold'>Food</Text>
-                                    <Text style={{color: tinyColor(colors.text).darken(40).toString()}}
-                                          className='text-sm'>Dinner</Text>
-                                </View>
-                                <Text style={{color: colors.text}} className='flex-1 text-right'>-$39</Text>
-                            </View>
-                        </View>
-
-                        <View className='flex flex-col gap-2'>
-                            <Text style={{color: colors.text}}>6/9</Text>
-                            <View className='flex flex-row gap-2 rounded-2xl border p-2'
-                                  style={{borderColor: colors.border}}>
-                                <Image source={require('@/assets/images/partial-react-logo.png')}
-                                       className='w-8 h-8 rounded-full'/>
-                                <View>
-                                    <Text style={{color: colors.text}} className='text-md font-bold'>Food</Text>
-                                    <Text style={{color: tinyColor(colors.text).darken(40).toString()}}
-                                          className='text-sm'>Dinner</Text>
-                                </View>
-                                <Text style={{color: colors.text}} className='flex-1 text-right'>-$39</Text>
-                            </View>
-
-                            <View className='flex flex-row gap-2 rounded-2xl border p-2'
-                                  style={{borderColor: colors.border}}>
-                                <Image source={require('@/assets/images/partial-react-logo.png')}
-                                       className='w-8 h-8 rounded-full'/>
-                                <View>
-                                    <Text style={{color: colors.text}} className='text-md font-bold'>Food</Text>
-                                    <Text style={{color: tinyColor(colors.text).darken(40).toString()}}
-                                          className='text-sm'>Dinner</Text>
-                                </View>
-                                <Text style={{color: colors.text}} className='flex-1 text-right'>-$39</Text>
-                            </View>
-                        </View>
-
-                        <View className='flex flex-col gap-2'>
-                            <Text style={{color: colors.text}}>6/9</Text>
-                            <View className='flex flex-row gap-2 rounded-2xl border p-2'
-                                  style={{borderColor: colors.border}}>
-                                <Image source={require('@/assets/images/partial-react-logo.png')}
-                                       className='w-8 h-8 rounded-full'/>
-                                <View>
-                                    <Text style={{color: colors.text}} className='text-md font-bold'>Food</Text>
-                                    <Text style={{color: tinyColor(colors.text).darken(40).toString()}}
-                                          className='text-sm'>Dinner</Text>
-                                </View>
-                                <Text style={{color: colors.text}} className='flex-1 text-right'>-$39</Text>
-                            </View>
-
-                            <View className='flex flex-row gap-2 rounded-2xl border p-2'
-                                  style={{borderColor: colors.border}}>
-                                <Image source={require('@/assets/images/partial-react-logo.png')}
-                                       className='w-8 h-8 rounded-full'/>
-                                <View>
-                                    <Text style={{color: colors.text}} className='text-md font-bold'>Food</Text>
-                                    <Text style={{color: tinyColor(colors.text).darken(40).toString()}}
-                                          className='text-sm'>Dinner</Text>
-                                </View>
-                                <Text style={{color: colors.text}} className='flex-1 text-right'>-$39</Text>
-                            </View>
-                        </View>
-
-                        <View className='flex flex-col gap-2'>
-                            <Text style={{color: colors.text}}>5/9</Text>
-                            <View className='flex flex-row gap-2 rounded-2xl border p-2'
-                                  style={{borderColor: colors.border}}>
-                                <Image source={require('@/assets/images/partial-react-logo.png')}
-                                       className='w-8 h-8 rounded-full'/>
-                                <View>
-                                    <Text style={{color: colors.text}} className='text-md font-bold'>Food</Text>
-                                    <Text style={{color: tinyColor(colors.text).darken(40).toString()}}
-                                          className='text-sm'>Dinner</Text>
-                                </View>
-                                <Text style={{color: colors.text}} className='flex-1 text-right'>-$39</Text>
-                            </View>
-
-                            <View className='flex flex-row gap-2 rounded-2xl border p-2'
-                                  style={{borderColor: colors.border}}>
-                                <Image source={require('@/assets/images/partial-react-logo.png')}
-                                       className='w-8 h-8 rounded-full'/>
-                                <View>
-                                    <Text style={{color: colors.text}} className='text-md font-bold'>Food</Text>
-                                    <Text style={{color: tinyColor(colors.text).darken(40).toString()}}
-                                          className='text-sm'>Dinner</Text>
-                                </View>
-                                <Text style={{color: colors.text}} className='flex-1 text-right'>-$39</Text>
-                            </View>
-                        </View>
-                    </View>
+                <ScrollView className='border-b border-gray-300' horizontal={true}
+                            showsHorizontalScrollIndicator={false}>
+                    {months.map(month => (
+                        <TouchableOpacity
+                            // style={{padding: 20}}
+                            className=' bg-white flex flex-row justify-center items-center'>
+                            <Text
+                                style={{paddingHorizontal: 24, paddingVertical: 6}}
+                                className='font-medium text-center text-lg'>{month}</Text>
+                        </TouchableOpacity>
+                    ))}
                 </ScrollView>
             </View>
 
+            {/*<View className='bg-white p-4'>*/}
+            {/*    <View className='flex flex-row justify-between items-center py-2'>*/}
+            {/*        <Text>Tiền vào</Text>*/}
+            {/*        <Text>0</Text>*/}
+            {/*    </View>*/}
+            {/*    <View className='flex flex-row justify-between items-center'>*/}
+            {/*        <Text>Tiền ra</Text>*/}
+            {/*        <Text className='text-right border-b border-gray-300 py-2' style={{width: '30%'}}>800000</Text>*/}
+            {/*    </View>*/}
+            {/*    <View className='flex flex-row justify-between py-2'>*/}
+            {/*        <Text>Còn lại</Text>*/}
+            {/*        <Text>135413531</Text>*/}
+            {/*    </View>*/}
+            {/*</View>*/}
 
-            <BottomSheet
+            <SectionList
+                contentContainerStyle={{
+                    paddingBottom: 80
+                }}
+                sections={transactionGroupByType}
+                keyExtractor={(index) => index.toString()}
+                renderSectionFooter={() => (
+                    <View style={{height: 40, backgroundColor: colors.background}}>
+                    </View>
+                )}
+                renderSectionHeader={({section}) => {
+                    console.log('section', section)
+                    return (
+                        <View className='border-b border-gray-300 bg-white'>
+                            <Transaction
+                                description={`${section.data.length} giao dịch`}
+                                amount={'40'}
+                                title={section.title}
+                                key={section.key}
+                            />
+                        </View>
+                    )
+                }}
+                renderItem={({item, index, section}) => {
+                    console.log('item', item)
+                    return (
+                        <View className='bg-white'>
+                            <Transaction
+                                description={item.description}
+                                amount={Format.getAmount(Number(item.amount), categoryTypeMapping(section.type))}
+                                title={Format.formatDate(item.date)}
+                                key={index}
+                                icon={null}
+                            />
+                        </View>
+                    )
+                }}
+            />
+
+            <BottomSheetModal
                 ref={bottomSheetRef}
                 onChange={handleSheetChange}
-                snapPoints={['80%']}
-                index={-1}
-                enablePanDownToClose={true}
+                index={0}
+                snapPoints={["80%"]}
+                style={{flex: 1}}
+                animationConfigs={{
+                    duration: 350,
+                    reduceMotion: ReduceMotion.Never,
+                    easing: Easing.inOut(Easing.quad),
+                }}
+                backdropComponent={({animatedIndex, style, animatedPosition}) => {
+                    console.log('animatedIndex', animatedIndex)
+                    console.log('animatedPosition', animatedPosition)
+                    console.log('style', style)
+                    const animatedStyle = useAnimatedStyle(() => {
+                        const opacity = interpolate(animatedIndex.value, [-1, 1], [0, 0.5])
+                        return {opacity}
+                    })
+                    return (
+                        <Animated.View style={[animatedStyle, styles.backdropBottomSheetModal]}>
+                            <Pressable onPress={handleClosePress}
+                                       style={style}></Pressable>
+                        </Animated.View>
+                    )
+                }}
             >
-                <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
+                <BottomSheetScrollView showsVerticalScrollIndicator={false}
+                                       contentContainerStyle={styles.contentContainer}>
                     <Wallets/>
                 </BottomSheetScrollView>
-            </BottomSheet>
-        </SafeAreaView>
+            </BottomSheetModal>
+        </View>
     );
 }
 
 
 const styles = StyleSheet.create({
-    titleWallet: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        marginBottom: 16,
+    wallet: {
+        display: 'flex',
+        flexDirection: 'row',
+        columnGap: 8,
+        alignItems: 'center',
         borderRadius: 6,
-        borderWidth: 1,
-        borderStyle: 'solid',
+        // borderWidth: 1,
+        // borderStyle: 'solid',
         paddingVertical: 4,
-        paddingHorizontal: 8,
+        paddingHorizontal: 12,
+        backgroundColor: '#DEDFE4'
+    },
+    walletTitle: {
+        fontSize: 16,
+        fontWeight: 'medium',
     },
     contentContainer: {
-        flex: 1,
-        paddingTop: 16,
+        paddingVertical: 16,
         paddingHorizontal: 16,
-        paddingBottom: 120,
     },
-    containerWallet: {
-        flex: 1,
-        rowGap: 16,
-        // paddingBottom: 90
+    backdropBottomSheetModal: {
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: "black",
     }
 });

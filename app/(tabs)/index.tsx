@@ -2,20 +2,39 @@ import 'react-native-reanimated';
 import {Image, StyleSheet, Platform, SafeAreaView, View, Text, ScrollView, Pressable} from 'react-native';
 import tinyColor from 'tinycolor2';
 import {useNavigation, useTheme} from "@react-navigation/native";
-import {Link} from "expo-router";
-import Transaction from "@/components/Transaction";
-import {TRANSACTION_TYPE} from "@/utils/format";
 import {AntDesign} from "@expo/vector-icons";
-import WalletCard, {WalletCardContent} from "@/components/wallet/WalletCard";
 import React from "react";
+import {WalletCardBase} from "@/components/wallet/WalletCardBase";
+import {WalletType} from "@/components/wallet/type";
+
+const mockupWallets: Array<WalletType> = [
+    {
+        id: 1,
+        walletType: 'Ví thanh toán',
+        amount: '134,900,000'
+    },
+    {
+        id: 2,
+        walletType: 'Ví thanh toán',
+        amount: '134,900,000'
+    },
+    {
+        id: 3,
+        walletType: 'Ví thanh toán',
+        amount: '134,900,000'
+    },
+    {
+        id: 4,
+        walletType: 'Ví thanh toán',
+        amount: '134,900,000'
+    },
+]
 
 export default function HomeScreen() {
     const {colors} = useTheme()
     const titleGray = tinyColor(colors.text).brighten(50).toString()
-    const navigation = useNavigation();
 
     const onPressWallet = () => {
-        navigation.navigate('transaction')
     }
 
     return (
@@ -37,10 +56,10 @@ export default function HomeScreen() {
                   style={{backgroundColor: colors.background}}>
                 <ScrollView showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
                     <View className='flex flex-col gap-y-4 pb-[80px]'>
-                        <WalletCard onPress={onPressWallet} walletType='Ví thanh toán' amount={'100,780,000'}/>
-                        <WalletCard onPress={onPressWallet} walletType='Ví thanh toán' amount={'100,780,000'}/>
-                        <WalletCard onPress={onPressWallet} walletType='Ví thanh toán' amount={'100,780,000'}/>
-                        <WalletCard onPress={onPressWallet} walletType='Ví thanh toán' amount={'100,780,000'}/>
+                        {Array.isArray(mockupWallets) ? mockupWallets.map(wallet => (
+                            <WalletCardBase key={wallet.id} onPress={onPressWallet} walletType={wallet.walletType}
+                                            amount={wallet.amount}/>
+                        )) : null}
                     </View>
                 </ScrollView>
             </View>

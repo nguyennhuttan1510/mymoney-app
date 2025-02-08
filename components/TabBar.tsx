@@ -68,19 +68,14 @@ export function TabBar({state, descriptors, navigation}: BottomTabBarProps) {
             }, animatedStyle]}/>
             {state.routes.map((route, index) => {
                 const {options} = descriptors[route.key];
-                const label =
-                    options.tabBarLabel !== undefined
-                        ? options.tabBarLabel
-                        : options.title !== undefined
-                            ? options.title
-                            : route.name;
+                const label = options.tabBarLabel
 
                 const isFocused = state.index === index;
 
                 const onPress = () => {
                     tabBarItemAnimation()
                     if (route.name === 'create') {
-                        router.push('/modals/transaction-create')
+                        router.push('/(modals)/transaction-create')
                         return
                     }
                     const event = navigation.emit({
@@ -121,7 +116,7 @@ export function TabBar({state, descriptors, navigation}: BottomTabBarProps) {
 const style = StyleSheet.create({
     tabBar: {
         position: 'absolute',
-        bottom: 24,
+        bottom: 20,
         zIndex: 10,
         flexDirection: 'row',
         alignItems: 'center',

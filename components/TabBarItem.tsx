@@ -9,13 +9,14 @@ import Animated, {
     useSharedValue,
     withSpring
 } from "react-native-reanimated";
+import {BottomTabNavigationOptions} from "@react-navigation/bottom-tabs";
 
 interface TabBarItem {
     onPress: (event: GestureResponderEvent) => void
     onLongPress: (event: GestureResponderEvent) => void
     routeName: string
     isFocused: boolean
-    label: string
+    label: string | undefined
     color?: string
     icon: (props?: any) => React.ReactNode
     options: any

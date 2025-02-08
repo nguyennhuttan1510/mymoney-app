@@ -2,13 +2,8 @@ import {StyleSheet, Image, Platform, Text, View, TextInput, Alert} from 'react-n
 import {BottomSheetModal, BottomSheetView} from "@gorhom/bottom-sheet";
 import React, {useCallback, useRef, useState} from "react";
 import {Easing, ReduceMotion} from "react-native-reanimated";
-import {AntDesign} from "@expo/vector-icons";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import {useTheme} from "@react-navigation/native";
-import DateTimePicker from '@react-native-community/datetimepicker';
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
-import TransactionCreateModal from "@/components/transaction/TransactionCreateModal";
-import ChosenWallet from "@/components/wallet/ChosenWallet";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 
 interface BottomSheetModel {

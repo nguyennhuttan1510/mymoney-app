@@ -1,10 +1,19 @@
+import moment from "moment";
+
+require("moment/locale/vi");
+moment.locale('vi')
+
 export enum TRANSACTION_TYPE {
-    EXPENSE,
-    INCOME
+    OUTCOME = 'outcome',
+    INCOME = 'income',
 }
 
-const getAmount = (amount: number, type: TRANSACTION_TYPE = TRANSACTION_TYPE.EXPENSE) => {
-    if(!amount || amount < 0) throw new Error('Invalid amount')
+const formatDate = (date: string | Date, format: string = 'DD [thg] MM YYYY, dddd'): string => {
+    return moment(date).format(format)
+}
+
+const getAmount = (amount: number, type: TRANSACTION_TYPE = TRANSACTION_TYPE.OUTCOME) => {
+    if (!amount || amount < 0) throw new Error('Invalid amount')
     if (type === TRANSACTION_TYPE.INCOME) {
         return `${amount} đ`
     } else {
@@ -13,7 +22,8 @@ const getAmount = (amount: number, type: TRANSACTION_TYPE = TRANSACTION_TYPE.EXP
 }
 
 const Format = {
-    getAmount
+    getAmount,
+    formatDate
 }
 
 export default Format
