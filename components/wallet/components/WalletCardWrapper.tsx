@@ -15,7 +15,7 @@ export default function WalletCardWrapper(props: WalletCardWrapperProps) {
     const {colors} = useTheme()
 
     return (
-        <View className='flex flex-col gap-2 rounded-2xl border overflow-hidden'
+        <View className='flex flex-col gap-2 rounded-2xl border overflow-hidden bg-white'
               style={{borderColor: colors.border}}>
             {header}
             {children}

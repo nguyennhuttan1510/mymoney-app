@@ -20,10 +20,10 @@ import Animated, {Easing, Extrapolation, interpolate, ReduceMotion, useAnimatedS
 import Wallets from "@/components/wallet/Wallets";
 import {AntDesign} from "@expo/vector-icons";
 import {TransactionType} from "@/hooks/useTransaction";
-import {CategoryType} from "@/app/(modals)/transaction-create/transaction-type";
 import Transaction from "@/components/transaction/Transaction";
 import Format, {TRANSACTION_TYPE} from "@/utils/format";
 import Amount from "@/utils/Amount";
+import {CategoryType} from "@/app/(app)/(root)/(modals)/transaction-create/transaction-type";
 
 type ChangeSpecificType<T, Key extends keyof T, NewType> = {
     [K in keyof T]: K extends Key ? NewType : T[K];
@@ -188,13 +188,10 @@ export default function TransactionScreen() {
     const transactionGroupByType = useMemo(() => {
             const categories = uniqueCategory(transactionDataMockup)
             return categories.map(category => {
-                const _type = {
-                    ...category,
-                    data: [] as TransactionHistoryType[]
-                }
+                const result: Omit<CategoryType, 'children'> & {data: TransactionHistoryType[]} = {...category, data: []}
                 const transactions = transactionDataMockup.filter(transaction => transaction.type?.id === category.id)
-                _type.data = transactions
-                return _type
+                result.data = transactions
+                return result
             })
         }
         , [])

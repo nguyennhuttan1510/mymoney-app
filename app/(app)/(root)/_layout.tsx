@@ -22,26 +22,17 @@ export default function RootLayout() {
     }
 
     return (
-        <SafeAreaView style={{flex: 1}}>
-            <StatusBar style={'auto'}/>
-            <GestureHandlerRootView style={{flex: 1}}>
-                <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-                    <BottomSheetModalProvider>
-                        <Stack>
-                            <Stack.Screen name="(tabs)"
-                                          options={{headerShown: false}}/>
-                            <Stack.Screen name="(modals)"
-                                          options={{
-                                              presentation: 'modal',
-                                              headerShown: false,
-                                              gestureEnabled: false,
-                                          }}/>
-                            <Stack.Screen name="+not-found"/>
-                        </Stack>
-                    </BottomSheetModalProvider>
-                </ThemeProvider>
-            </GestureHandlerRootView>
-        </SafeAreaView>
+        <Stack>
+          <Stack.Screen name="(tabs)"
+                        options={{headerShown: false}}/>
+          <Stack.Screen name="(modals)"
+                        options={{
+                          presentation: 'modal',
+                          headerShown: false,
+                          gestureEnabled: false,
+                        }}/>
+          <Stack.Screen name="+not-found"/>
+        </Stack>
 
     );
 }

@@ -5,38 +5,41 @@ import {router} from "expo-router";
 
 export default function SignInScreen() {
     const {signIn} = useSession()
+
+    const handleAppleLogin = async () => {
+      try {
+        const credential = await AppleAuthentication.signInAsync({
+          requestedScopes: [
+            AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+            AppleAuthentication.AppleAuthenticationScope.EMAIL,
+          ],
+        });
+        console.log('credential', credential)
+        signIn(credential)
+        router.replace('/');
+      } catch (e) {
+        if (e.code === 'ERR_REQUEST_CANCELED') {
+          // handle that the user canceled the sign-in flow
+        } else {
+          // handle other errors
+        }
+      }
+    }
+
+    const onSignIn = async () => {
+      await handleAppleLogin()
+    }
+
     return (
         <View>
             <Text>SignInScreen</Text>
-            <TouchableOpacity onPress={() => {
-                signIn()
-                router.replace('/');
-            }}>
-                <Text>Sign In</Text>
-            </TouchableOpacity>
-            {/*<AppleAuthentication.AppleAuthenticationButton*/}
-            {/*    buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}*/}
-            {/*    buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}*/}
-            {/*    cornerRadius={5}*/}
-            {/*    style={styles.button}*/}
-            {/*    onPress={async () => {*/}
-            {/*        try {*/}
-            {/*            const credential = await AppleAuthentication.signInAsync({*/}
-            {/*                requestedScopes: [*/}
-            {/*                    AppleAuthentication.AppleAuthenticationScope.FULL_NAME,*/}
-            {/*                    AppleAuthentication.AppleAuthenticationScope.EMAIL,*/}
-            {/*                ],*/}
-            {/*            });*/}
-            {/*            // signed in*/}
-            {/*        } catch (e) {*/}
-            {/*            if (e.code === 'ERR_REQUEST_CANCELED') {*/}
-            {/*                // handle that the user canceled the sign-in flow*/}
-            {/*            } else {*/}
-            {/*                // handle other errors*/}
-            {/*            }*/}
-            {/*        }*/}
-            {/*    }}*/}
-            {/*/>*/}
+            <AppleAuthentication.AppleAuthenticationButton
+                buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
+                buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
+                cornerRadius={5}
+                style={styles.button}
+                onPress={onSignIn}
+            />
         </View>
     )
 }

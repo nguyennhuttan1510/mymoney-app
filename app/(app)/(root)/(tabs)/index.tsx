@@ -1,11 +1,22 @@
 import 'react-native-reanimated';
-import {Image, StyleSheet, Platform, SafeAreaView, View, Text, ScrollView, Pressable} from 'react-native';
+import {
+    Image,
+    StyleSheet,
+    Platform,
+    SafeAreaView,
+    View,
+    Text,
+    ScrollView,
+    Pressable,
+    TouchableOpacity
+} from 'react-native';
 import tinyColor from 'tinycolor2';
 import {useNavigation, useTheme} from "@react-navigation/native";
 import {AntDesign} from "@expo/vector-icons";
 import React from "react";
 import {WalletCardBase} from "@/components/wallet/WalletCardBase";
 import {WalletType} from "@/components/wallet/type";
+import * as SecureStore from 'expo-secure-store';
 
 const mockupWallets: Array<WalletType> = [
     {
@@ -37,8 +48,13 @@ export default function HomeScreen() {
     const onPressWallet = () => {
     }
 
+    const onPress = () => {
+        const session =  SecureStore.getItem('session')
+        console.log('session', session)
+    }
+
     return (
-        <SafeAreaView style={{flex: 1}}>
+        <View style={{flex: 1, backgroundColor: 'white'}}>
             <View className='p-2 h-fit'>
                 <View className='flex flex-row gap-x-4 p-4 mb-4'>
                     <View className='flex-1 border py-2 px-4 rounded-lg' style={{borderColor: colors.border}}>
@@ -46,9 +62,9 @@ export default function HomeScreen() {
                         <Text style={{color: colors.text}} className='text-2xl'><Text
                             style={{color: titleGray}}>VND</Text> 341,880,000</Text>
                     </View>
-                    <View className='border p-4 rounded-lg' style={{borderColor: colors.border}}>
+                    <TouchableOpacity onPress={onPress} className='border p-4 rounded-lg' style={{borderColor: colors.border}}>
                         <AntDesign name="piechart" size={30} color="black"/>
-                    </View>
+                    </TouchableOpacity>
                 </View>
             </View>
 
@@ -63,6 +79,6 @@ export default function HomeScreen() {
                     </View>
                 </ScrollView>
             </View>
-        </SafeAreaView>
+        </View>
     );
 }

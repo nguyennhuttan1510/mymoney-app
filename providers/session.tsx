@@ -1,13 +1,17 @@
 import {useContext, createContext, type PropsWithChildren} from 'react';
 import {useStorageState} from '../hooks/useStorageState';
+import {AppleAuthenticationCredential} from "expo-apple-authentication";
+import * as AppleAuthentication from "expo-apple-authentication";
 
-const AuthContext = createContext<{
-    signIn: () => void;
-    signOut: () => void;
-    session?: string | null;
-    isLoading: boolean;
-}>({
-    signIn: () => null,
+interface ValueContextType {
+  signIn: (credential:AppleAuthenticationCredential) => void;
+  signOut: () => void;
+  session?: string | null;
+  isLoading: boolean;
+}
+
+const AuthContext = createContext<ValueContextType>({
+    signIn: (credential) => null,
     signOut: () => null,
     session: null,
     isLoading: false,
@@ -25,19 +29,23 @@ export function useSession() {
     return value;
 }
 
+
 export function SessionProvider({children}: PropsWithChildren) {
     const [[isLoading, session], setSession] = useStorageState('session');
+
+    const signIn:ValueContextType['signIn'] = (credential) => {
+      setSession(credential.user)
+    }
+
+    const signOut: ValueContextType['signOut'] = () => {
+        setSession(null);
+    }
 
     return (
         <AuthContext.Provider
             value={{
-                signIn: () => {
-                    // Perform sign-in logic here
-                    setSession('xxx');
-                },
-                signOut: () => {
-                    setSession(null);
-                },
+                signIn,
+                signOut,
                 session,
                 isLoading,
             }}>

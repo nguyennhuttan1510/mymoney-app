@@ -42,7 +42,7 @@ export default function TransactionCreate() {
                     </View>
                     <TouchableOpacity
                         onPress={() => {
-                            router.push('/(modals)/transaction-create/wallet-selection')
+                            router.push('/(app)/(root)/(modals)/transaction-create/wallet-selection')
                         }}
                         className='flex-1 flex flex-row items-center justify-between border-b border-b-gray-200 py-3'>
                         <Text
@@ -78,7 +78,7 @@ export default function TransactionCreate() {
                     </View>
                     <TouchableOpacity
                         onPress={() => {
-                            router.push('/(modals)/transaction-create/transaction-type')
+                            router.push('/(app)/(root)/(modals)/transaction-create/transaction-type')
                         }}
                         className='flex-1 flex flex-row items-center justify-between border-b border-b-gray-200 py-3'>
                         <Text className='text-xl text-gray-500'>{transaction.type?.title || 'Chọn nhóm'}</Text>
@@ -91,7 +91,7 @@ export default function TransactionCreate() {
                         <AntDesign name="form" size={24} color="black"/>
                     </View>
                     <TouchableOpacity onPress={() => {
-                        router.push('/(modals)/transaction-create/note')
+                        router.push('/(app)/(root)/(modals)/transaction-create/note')
                     }} className='flex-1 flex flex-row items-center justify-between border-b border-b-gray-200 py-3'>
                         <Text className='text-xl text-gray-500'>{transaction?.description || 'Ghi chú'}</Text>
                         <MaterialIcons name="keyboard-arrow-right" size={24} color="#e5e7eb"/>
