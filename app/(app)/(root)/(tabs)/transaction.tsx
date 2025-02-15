@@ -23,6 +23,7 @@ import {TransactionType} from "@/hooks/useTransaction";
 import {CategoryType} from "@/app/(modals)/transaction-create/transaction-type";
 import Transaction from "@/components/transaction/Transaction";
 import Format, {TRANSACTION_TYPE} from "@/utils/format";
+import Amount from "@/utils/Amount";
 
 type ChangeSpecificType<T, Key extends keyof T, NewType> = {
     [K in keyof T]: K extends Key ? NewType : T[K];
@@ -33,7 +34,7 @@ type TransactionHistoryType = ChangeSpecificType<Omit<TransactionType, 'wallet'>
 
 const transactionDataMockup: TransactionHistoryType[] = [
     {
-        amount: '10.000',
+        amount: 10000,
         date: new Date().toISOString(),
         description: 'Tiền điện',
         type: {
@@ -43,7 +44,7 @@ const transactionDataMockup: TransactionHistoryType[] = [
         },
     },
     {
-        amount: '10.000',
+        amount: 10000,
         date: new Date().toISOString(),
         description: '',
         type: {
@@ -53,7 +54,7 @@ const transactionDataMockup: TransactionHistoryType[] = [
         }
     },
     {
-        amount: '10.000',
+        amount: 10000,
         date: new Date().toISOString(),
         description: '',
         type: {
@@ -63,7 +64,7 @@ const transactionDataMockup: TransactionHistoryType[] = [
         }
     },
     {
-        amount: '20.000',
+        amount: 20000,
         date: new Date().toISOString(),
         description: '',
         type: {
@@ -73,7 +74,7 @@ const transactionDataMockup: TransactionHistoryType[] = [
         }
     },
     {
-        amount: '20.000',
+        amount: 20000,
         date: new Date().toISOString(),
         description: '',
         type: {
@@ -83,7 +84,7 @@ const transactionDataMockup: TransactionHistoryType[] = [
         }
     },
     {
-        amount: '20.000',
+        amount: 20000,
         date: new Date().toISOString(),
         description: '',
         type: {
@@ -93,7 +94,7 @@ const transactionDataMockup: TransactionHistoryType[] = [
         }
     },
     {
-        amount: '20.000',
+        amount: 20000,
         date: new Date().toISOString(),
         description: '',
         type: {
@@ -103,7 +104,7 @@ const transactionDataMockup: TransactionHistoryType[] = [
         }
     },
     {
-        amount: '20.000',
+        amount: 20000,
         date: new Date().toISOString(),
         description: '',
         type: {
@@ -113,7 +114,7 @@ const transactionDataMockup: TransactionHistoryType[] = [
         }
     },
     {
-        amount: '500.000',
+        amount: 500000,
         date: new Date().toISOString(),
         description: '',
         type: {
@@ -123,7 +124,7 @@ const transactionDataMockup: TransactionHistoryType[] = [
         }
     },
     {
-        amount: '500.000',
+        amount: 500000,
         date: new Date().toISOString(),
         description: '',
         type: {
@@ -133,7 +134,7 @@ const transactionDataMockup: TransactionHistoryType[] = [
         }
     },
     {
-        amount: '500.000',
+        amount: 500000,
         date: new Date().toISOString(),
         description: '',
         type: {
@@ -260,7 +261,7 @@ export default function TransactionScreen() {
                 sections={transactionGroupByType}
                 keyExtractor={(index) => index.toString()}
                 renderSectionFooter={() => (
-                    <View style={{height: 40, backgroundColor: colors.background}}>
+                    <View style={{height: 20, backgroundColor: colors.background}}>
                     </View>
                 )}
                 renderSectionHeader={({section}) => {
@@ -268,6 +269,7 @@ export default function TransactionScreen() {
                     return (
                         <View className='border-b border-gray-300 bg-white'>
                             <Transaction
+                                type={categoryTypeMapping(section.type)}
                                 description={`${section.data.length} giao dịch`}
                                 amount={'40'}
                                 title={section.title}
@@ -282,7 +284,8 @@ export default function TransactionScreen() {
                         <View className='bg-white'>
                             <Transaction
                                 description={item.description}
-                                amount={Format.getAmount(Number(item.amount), categoryTypeMapping(section.type))}
+                                amount={item.amount}
+                                type={categoryTypeMapping(section.type)}
                                 title={Format.formatDate(item.date)}
                                 key={index}
                                 icon={null}
@@ -340,7 +343,7 @@ const styles = StyleSheet.create({
         // borderStyle: 'solid',
         paddingVertical: 4,
         paddingHorizontal: 12,
-        backgroundColor: '#DEDFE4'
+        backgroundColor: '#f3f3f3'
     },
     walletTitle: {
         fontSize: 16,

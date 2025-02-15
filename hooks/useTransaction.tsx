@@ -4,7 +4,7 @@ import {CategoryType} from "@/app/(modals)/transaction-create/transaction-type";
 import items from "ajv/lib/vocabularies/applicator/items";
 
 export interface TransactionType {
-    amount: string
+    amount: number
     type: CategoryType
     description: string
     date: string
@@ -49,7 +49,7 @@ const mockupWallets: Array<WalletType> = [
 export const TransactionContext = React.createContext<TransactionContextType | null>(null)
 
 const transactionDefault: Partial<TransactionType> = {
-    amount: '0',
+    amount: 0,
     date: new Date().toISOString(),
     wallet: mockupWallets.find(wallet => wallet?.default),
 }

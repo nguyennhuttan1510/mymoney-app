@@ -25,7 +25,7 @@ export default function TransactionCreate() {
     };
 
     const onChangeAmount = (amount: string) => {
-        setTransaction(prevState => ({...prevState, amount: amount}))
+        setTransaction(prevState => ({...prevState, amount: Number(amount)}))
     }
 
     const handleSubmitEditing = () => {
@@ -34,7 +34,7 @@ export default function TransactionCreate() {
     };
 
     return (
-        <View style={{flex: 1}}>
+        <View style={{flex: 1, backgroundColor: 'white'}}>
             <View className='flex flex-col gap-y-4 p-4'>
                 <View className='flex flex-row items-center gap-x-4'>
                     <View className='w-1/6'>
@@ -60,7 +60,7 @@ export default function TransactionCreate() {
                         <TextInput
                             className='text-xl font-bold text-lg'
                             onChangeText={onChangeAmount}
-                            value={transaction.amount}
+                            value={String(transaction.amount)}
                             keyboardType="numeric" // Chỉ hiển thị bàn phím số
                             placeholder='Nhập số tiền'
                             returnKeyType="done" // Nút "Nhập" trên bàn phím
@@ -122,7 +122,7 @@ export default function TransactionCreate() {
                     disabled={isDisabledCreateTransaction}
                     onPress={handleSubmitTransaction}
                     style={{backgroundColor: isDisabledCreateTransaction ? '#DEDFE4' : 'black'}}
-                    className='flex-row items-center justify-center gap-x-4 rounded-lg px-4 py-2'>
+                    className='flex-row items-center justify-center gap-x-4 rounded-full px-4 py-2'>
                     <Text className='text-white font-bold text-xl '>Tạo giao dịch</Text>
                 </TouchableOpacity>
 
@@ -130,8 +130,8 @@ export default function TransactionCreate() {
                     onPress={() => {
                         router.back()
                     }}
-                    className='flex-row items-center justify-center gap-x-4 bg-red-600 rounded-lg px-4 py-2'>
-                    <Text className='text-white font-bold text-xl '>Hủy</Text>
+                    className='flex-row items-center justify-center gap-x-4 border border-black bg-white rounded-full px-4 py-2'>
+                    <Text className='text-black font-bold text-xl'>Hủy</Text>
                 </TouchableOpacity>
             </View>
         </View>

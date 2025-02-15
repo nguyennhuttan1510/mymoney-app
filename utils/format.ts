@@ -14,10 +14,12 @@ const formatDate = (date: string | Date, format: string = 'DD [thg] MM YYYY, ddd
 
 const getAmount = (amount: number, type: TRANSACTION_TYPE = TRANSACTION_TYPE.OUTCOME) => {
     if (!amount || amount < 0) throw new Error('Invalid amount')
-    if (type === TRANSACTION_TYPE.INCOME) {
-        return `${amount} đ`
-    } else {
-        return `-${amount} đ`
+    const currency = Intl.NumberFormat('vi').format(amount)
+    switch (type) {
+        case TRANSACTION_TYPE.INCOME:
+            return `${currency}`
+        default:
+            return `-${currency}`
     }
 }
 

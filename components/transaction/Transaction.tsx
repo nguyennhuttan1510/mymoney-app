@@ -4,17 +4,19 @@ import tinyColor from "tinycolor2";
 import {useTheme} from "@react-navigation/native";
 import Format, {TRANSACTION_TYPE} from "@/utils/format";
 import {CategoryType} from "@/app/(modals)/transaction-create/transaction-type";
+import Amount from "@/utils/Amount";
 
 interface TransactionProps {
     description: string | React.ReactNode
-    amount: string
+    amount: React.ReactNode | string
     title: string
+    type: TRANSACTION_TYPE
     icon?: React.ReactNode | null
 }
 
 export default function Transaction(props: TransactionProps) {
     console.log('props transaction', props)
-    const {amount, description, title, icon} = props
+    const {amount, description, title, icon, type} = props
     const {colors} = useTheme()
     console.log('props icon transaction', icon)
     const iconDefault = <Image source={require('@/assets/images/partial-react-logo.png')}
@@ -28,11 +30,14 @@ export default function Transaction(props: TransactionProps) {
             </View>
             <View>
                 <Text style={{color: colors.text}} className='text-md font-bold'>{title}</Text>
-                <Text style={{color: tinyColor(colors.text).darken(40).toString()}}
+                <Text style={{color: 'gray'}}
                       className='text-sm'>{description}</Text>
             </View>
-            <Text style={{color: colors.text}}
-                  className='flex-1 text-right'>{amount}</Text>
+
+            <View className='flex-1'>
+                {typeof amount === 'number' ?
+                    <Amount className='text-right text-md font-bold' amount={amount} type={type}/> : amount}
+            </View>
         </View>
     );
 };
